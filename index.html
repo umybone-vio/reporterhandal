@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WartaEdu - Petualangan Jurnalis Muda (Teks Berita Kelas 8)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tone.js for Sound Effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .newspaper-title {
+            font-family: 'Playfair Display', serif;
+        }
+        .newspaper-texture {
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Card flip animation for matching game */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+    </style>
+</head>
+<body class="newspaper-texture min-h-screen flex flex-col justify-between text-slate-800">
+
+    <!-- HEADER -->
+    <header class="bg-white border-b-4 border-double border-slate-800 shadow-sm sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-slate-900 text-white p-2.5 rounded-lg shadow-md flex items-center justify-center">
+                    <i class="fa-solid fa-newspaper text-xl animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="newspaper-title text-xl md:text-2xl font-extrabold tracking-tight text-slate-900 leading-none">WARTA EDU</h1>
+                    <p class="text-xs text-slate-500 font-semibold tracking-wider uppercase">Petualangan Jurnalis Muda Kelas VIII</p>
+                </div>
+            </div>
+            
+            <!-- User Status in Header -->
+            <div id="header-user-status" class="hidden flex items-center space-x-4 mt-2 sm:mt-0">
+                <div class="bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-full flex items-center space-x-2">
+                    <span id="player-avatar-header" class="text-lg">👨‍🎓</span>
+                    <span id="player-name-header" class="text-xs md:text-sm font-bold text-slate-700">Siswa</span>
+                </div>
+                <div class="bg-amber-100 text-amber-800 border border-amber-200 px-3 py-1.5 rounded-full flex items-center space-x-1.5">
+                    <i class="fa-solid fa-star text-amber-500"></i>
+                    <span id="player-stars-header" class="text-xs md:text-sm font-extrabold">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-5xl w-full mx-auto p-4 flex flex-col justify-center">
+        
+        <!-- ================= WELCOME SCREEN ================= -->
+        <section id="welcome-screen" class="space-y-6 max-w-2xl mx-auto w-full bg-white p-6 md:p-10 rounded-2xl border-2 border-slate-800 shadow-[8px_8px_0px_0px_rgba(30,41,59,1)] transition-all duration-300">
+            <div class="text-center space-y-4">
+                <span class="bg-indigo-100 text-indigo-800 text-xs font-extrabold px-3 py-1.5 rounded-full uppercase tracking-wider">Edisi Bahasa Indonesia Kelas VIII</span>
+                <h2 class="newspaper-title text-3xl md:text-5xl font-bold text-slate-900 leading-tight">Menjadi Reporter Handal Hari Ini!</h2>
+                <p class="text-slate-600 text-sm md:text-base leading-relaxed">
+                    Halo calon jurnalis hebat! Mari belajar memahami **Teks Berita** melalui petualangan seru. Kumpulkan lencana jurnalistik dan buktikan kamu layak menjadi **Pemimpin Redaksi**!
+                </p>
+            </div>
+
+            <!-- Choose Character & Enter Name -->
+            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Pilih Karakter Jurnalismu:</label>
+                    <div class="grid grid-cols-4 gap-3">
+                        <button onclick="selectAvatar('👨‍🎓', this)" class="avatar-btn p-3 bg-white border-2 border-indigo-600 rounded-xl text-2xl hover:bg-indigo-50 transition transform hover:-translate-y-0.5 shadow-sm">👨‍🎓</button>
+                        <button onclick="selectAvatar('👩‍🎓', this)" class="avatar-btn p-3 bg-white border border-slate-200 rounded-xl text-2xl hover:bg-indigo-50 transition transform hover:-translate-y-0.5 shadow-sm">👩‍🎓</button>
+                        <button onclick="selectAvatar('🎤', this)" class="avatar-btn p-3 bg-white border border-slate-200 rounded-xl text-2xl hover:bg-indigo-50 transition transform hover:-translate-y-0.5 shadow-sm">🎤</button>
+                        <button onclick="selectAvatar('📝', this)" class="avatar-btn p-3 bg-white border border-slate-200 rounded-xl text-2xl hover:bg-indigo-50 transition transform hover:-translate-y-0.5 shadow-sm">📝</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="player-name-input" class="block text-sm font-bold text-slate-700 mb-2">Nama Lengkap Kamu:</label>
+                    <input type="text" id="player-name-input" placeholder="Masukkan nama panggilanmu..." class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-medium text-slate-800">
+                </div>
+            </div>
+
+            <button onclick="startApp()" class="w-full bg-slate-900 text-white font-bold py-4 px-6 rounded-xl hover:bg-slate-800 transition transform hover:-translate-y-1 shadow-lg flex items-center justify-center space-x-2 text-lg">
+                <span>Mulai Redaksi Sekarang!</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </section>
+
+        <!-- ================= DASHBOARD SCREEN ================= -->
+        <section id="dashboard-screen" class="hidden space-y-6 w-full">
+            <!-- Daily Quote Board -->
+            <div class="bg-amber-50 border-2 border-amber-300 p-4 rounded-xl flex items-start space-x-3 shadow-sm">
+                <span class="text-2xl mt-0.5">📢</span>
+                <div>
+                    <h4 class="font-extrabold text-amber-900 text-sm">TUGAS HARI INI: LIPUTAN KATA</h4>
+                    <p class="text-xs text-amber-800 mt-0.5 leading-relaxed">Selesaikan setiap modul untuk mendapatkan poin prestasi. Pelajari dasar-dasarnya di Kelas Jurnalistik, lalu taklukkan misi yang tersedia!</p>
+                </div>
+            </div>
+
+            <!-- Grid Missions -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- MODUL 1: KELAS JURNALISTIK -->
+                <div class="bg-white border-2 border-slate-800 p-6 rounded-2xl shadow-[5px_5px_0px_0px_rgba(30,41,59,1)] hover:shadow-[8px_8px_0px_0px_rgba(30,41,59,1)] transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full"><i class="fa-solid fa-book-open mr-1"></i> Teori Dasar</span>
+                            <span id="badge-materi" class="text-slate-300"><i class="fa-solid fa-circle-check text-xl"></i></span>
+                        </div>
+                        <h3 class="newspaper-title text-2xl font-bold mb-2">1. Kelas Jurnalistik</h3>
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">Pelajari unsur ADiKSiMBa, struktur piramida terbalik, dan kaidah kebahasaan teks berita kelas 8 di kelas digital interaktif.</p>
+                    </div>
+                    <button onclick="goToScreen('materi-screen')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center space-x-2">
+                        <span>Buka Modul Pembelajaran</span>
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- MISI 1: DETEKTIF ADIKSIMBA -->
+                <div class="bg-white border-2 border-slate-800 p-6 rounded-2xl shadow-[5px_5px_0px_0px_rgba(30,41,59,1)] hover:shadow-[8px_8px_0px_0px_rgba(30,41,59,1)] transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full"><i class="fa-solid fa-puzzle-piece mr-1"></i> Mini Game 1</span>
+                            <span id="badge-detektif" class="text-slate-300"><i class="fa-solid fa-circle-check text-xl"></i></span>
+                        </div>
+                        <h3 class="newspaper-title text-2xl font-bold mb-2">2. Detektif ADiKSiMBa</h3>
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">Gunakan insting detektifmu untuk menguji pemahaman unsur teks berita: Apa, Di mana, Kapan, Siapa, Mengapa, Bagaimana.</p>
+                    </div>
+                    <button onclick="startDetektifGame()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center space-x-2">
+                        <span>Mulai Misi 1</span>
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- MISI 2: STRUKTUR PIRAMIDA -->
+                <div class="bg-white border-2 border-slate-800 p-6 rounded-2xl shadow-[5px_5px_0px_0px_rgba(30,41,59,1)] hover:shadow-[8px_8px_0px_0px_rgba(30,41,59,1)] transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full"><i class="fa-solid fa-sort mr-1"></i> Mini Game 2</span>
+                            <span id="badge-piramida" class="text-slate-300"><i class="fa-solid fa-circle-check text-xl"></i></span>
+                        </div>
+                        <h3 class="newspaper-title text-2xl font-bold mb-2">3. Susun Piramida Terbalik</h3>
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">Susun bagian teks berita acak ke posisi struktur yang benar: Kepala Berita (Lead), Tubuh Berita, atau Kaki Berita.</p>
+                    </div>
+                    <button onclick="startPiramidaGame()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center space-x-2">
+                        <span>Mulai Misi 2</span>
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- MISI 3: KUIS REDAKTUR -->
+                <div class="bg-white border-2 border-slate-800 p-6 rounded-2xl shadow-[5px_5px_0px_0px_rgba(30,41,59,1)] hover:shadow-[8px_8px_0px_0px_rgba(30,41,59,1)] transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full"><i class="fa-solid fa-graduation-cap mr-1"></i> Ujian Akhir</span>
+                            <span id="badge-kuis" class="text-slate-300"><i class="fa-solid fa-circle-check text-xl"></i></span>
+                        </div>
+                        <h3 class="newspaper-title text-2xl font-bold mb-2">4. Ujian Kuis Redaktur</h3>
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">Uji pengetahuan utuhmu seputar teks berita demi mendapatkan sertifikat "Pemimpin Redaksi Terbaik".</p>
+                    </div>
+                    <button onclick="startQuiz()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-4 rounded-xl transition flex items-center justify-center space-x-2">
+                        <span>Mulai Kuis Redaktur</span>
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Leaderboard / Report Card CTA -->
+            <div class="bg-white border-2 border-slate-800 p-5 rounded-2xl shadow-sm flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-4">
+                    <div class="text-3xl bg-amber-100 p-3 rounded-xl">🏆</div>
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-lg">Evaluasi Hasil Jurnalis</h4>
+                        <p class="text-xs text-slate-500">Lihat lencana, nilai akhir, serta rapor evaluasi dari pimpinan redaksi.</p>
+                    </div>
+                </div>
+                <button onclick="showReport()" class="w-full md:w-auto bg-slate-900 text-white font-bold px-6 py-3 rounded-xl hover:bg-slate-800 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>Buka Rapor & Lencana</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= MATERI SCREEN ================= -->
+        <section id="materi-screen" class="hidden space-y-6 w-full">
+            <div class="flex justify-between items-center">
+                <button onclick="goToScreen('dashboard-screen')" class="text-slate-600 hover:text-slate-900 font-bold flex items-center space-x-2 text-sm">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Kembali ke Redaksi</span>
+                </button>
+                <span class="text-xs bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-full"><i class="fa-solid fa-book-open mr-1.5"></i>Ruang Belajar</span>
+            </div>
+
+            <div class="bg-white border-2 border-slate-800 rounded-2xl shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] overflow-hidden">
+                <!-- Navigation Tabs -->
+                <div class="bg-slate-100 border-b border-slate-200 grid grid-cols-3 text-center text-xs md:text-sm font-bold">
+                    <button id="tab-adiksiba" onclick="switchMateriTab('adiksiba')" class="py-4 border-r border-slate-200 text-indigo-600 bg-white border-b-2 border-b-indigo-600">
+                        1. ADiKSiMBa
+                    </button>
+                    <button id="tab-struktur" onclick="switchMateriTab('struktur')" class="py-4 border-r border-slate-200 text-slate-600 hover:text-slate-800 hover:bg-slate-50 transition">
+                        2. Struktur Berita
+                    </button>
+                    <button id="tab-kebahasaan" onclick="switchMateriTab('kebahasaan')" class="py-4 text-slate-600 hover:text-slate-800 hover:bg-slate-50 transition">
+                        3. Kebahasaan
+                    </button>
+                </div>
+
+                <!-- Tab Content: ADiKSiMBa -->
+                <div id="materi-adiksiba" class="p-6 md:p-8 space-y-6">
+                    <div class="space-y-3">
+                        <h3 class="newspaper-title text-2xl md:text-3xl font-bold text-slate-950">Mengenal Unsur-Unsur Berita (ADiKSiMBa)</h3>
+                        <p class="text-sm md:text-base text-slate-600 leading-relaxed">Sebuah teks berita dikatakan lengkap jika memenuhi unsur-unsur dasar **5W+1H**. Dalam Bahasa Indonesia, rumus ini disingkat secara kreatif menjadi **ADiKSiMBa**:</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-xl flex items-start space-x-3">
+                            <span class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-black flex-shrink-0">A</span>
+                            <div>
+                                <h4 class="font-extrabold text-indigo-950">Apa (What)</h4>
+                                <p class="text-xs text-indigo-800 mt-1">Membahas peristiwa atau kejadian apa yang sedang diwartakan/diberitakan.</p>
+                            </div>
+                        </div>
+                        <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-xl flex items-start space-x-3">
+                            <span class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-black flex-shrink-0">Di</span>
+                            <div>
+                                <h4 class="font-extrabold text-indigo-950">Di mana (Where)</h4>
+                                <p class="text-xs text-indigo-800 mt-1">Lokasi, tempat, atau latar daerah terjadinya peristiwa tersebut.</p>
+                            </div>
+                        </div>
+                        <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-xl flex items-start space-x-3">
+                            <span class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-black flex-shrink-0">K</span>
+                            <div>
+                                <h4 class="font-extrabold text-indigo-950">Kapan (When)</h4>
+                                <p class="text-xs text-indigo-800 mt-1">Waktu peristiwa (hari, tanggal, jam, atau rentang waktu kejadian).</p>
+                            </div>
+                        </div>
+                        <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-xl flex items-start space-x-3">
+                            <span class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-black flex-shrink-0">Si</span>
+                            <div>
+                                <h4 class="font-extrabold text-indigo-950">Siapa (Who)</h4>
+                                <p class="text-xs text-indigo-800 mt-1">Orang-orang atau subjek yang terlibat langsung dalam berita tersebut.</p>
+                            </div>
+                        </div>
+                        <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-xl flex items-start space-x-3">
+                            <span class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-black flex-shrink-0">M</span>
+                            <div>
+                                <h4 class="font-extrabold text-indigo-950">Mengapa (Why)</h4>
+                                <p class="text-xs text-indigo-800 mt-1">Alasan atau latar belakang yang menyebabkan peristiwa itu terjadi.</p>
+                            </div>
+                        </div>
+                        <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-xl flex items-start space-x-3">
+                            <span class="bg-indigo-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-black flex-shrink-0">Ba</span>
+                            <div>
+                                <h4 class="font-extrabold text-indigo-950">Bagaimana (How)</h4>
+                                <p class="text-xs text-indigo-800 mt-1">Proses, kronologi, atau jalannya peristiwa tersebut berlangsung.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Struktur Berita -->
+                <div id="materi-struktur" class="hidden p-6 md:p-8 space-y-6">
+                    <div class="space-y-3">
+                        <h3 class="newspaper-title text-2xl md:text-3xl font-bold text-slate-950">Struktur Berita: Piramida Terbalik</h3>
+                        <p class="text-sm md:text-base text-slate-600 leading-relaxed">Berita ditulis dengan pola **Piramida Terbalik**. Artinya, informasi yang paling penting diletakkan di bagian atas, diikuti dengan informasi penjelas di bawahnya.</p>
+                    </div>
+
+                    <!-- Visual Representation -->
+                    <div class="max-w-xl mx-auto space-y-2 mt-4">
+                        <!-- Kepala -->
+                        <div class="bg-orange-600 text-white p-4 rounded-t-xl text-center shadow-md transform hover:scale-[1.02] transition">
+                            <h4 class="font-extrabold text-base md:text-lg">Kepala Berita (Lead / Teras Berita)</h4>
+                            <p class="text-xs text-orange-100 mt-1">Bagian paling krusial! Memuat inti ADiKSiMBa secara cepat dan ringkas agar pembaca langsung paham esensinya.</p>
+                        </div>
+                        <!-- Tubuh -->
+                        <div class="bg-orange-500 text-white p-4 text-center shadow-md w-[85%] mx-auto transform hover:scale-[1.02] transition">
+                            <h4 class="font-extrabold text-base md:text-lg">Tubuh Berita (Body)</h4>
+                            <p class="text-xs text-orange-100 mt-1">Penjelasan detail mengenai mengapa dan bagaimana peristiwa terjadi. Berisi fakta-fakta pendukung dan kronologis lengkap.</p>
+                        </div>
+                        <!-- Kaki -->
+                        <div class="bg-orange-400 text-white p-4 rounded-b-xl text-center shadow-md w-[70%] mx-auto transform hover:scale-[1.02] transition">
+                            <h4 class="font-extrabold text-base md:text-lg">Kaki Berita (Tail)</h4>
+                            <p class="text-xs text-orange-500 mt-1 font-bold">Informasi tambahan / pelengkap yang jika dipotong atau dihilangkan, tidak merusak keutuhan isi berita.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Kebahasaan -->
+                <div id="materi-kebahasaan" class="hidden p-6 md:p-8 space-y-6">
+                    <div class="space-y-3">
+                        <h3 class="newspaper-title text-2xl md:text-3xl font-bold text-slate-950">Kaidah Kebahasaan Teks Berita</h3>
+                        <p class="text-sm md:text-base text-slate-600 leading-relaxed">Untuk menyampaikan berita secara objektif dan mudah dipahami, jurnalis menggunakan kaidah kebahasaan khusus:</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <!-- Kebahasaan Cards -->
+                        <div class="border-l-4 border-emerald-600 bg-emerald-50/50 p-3.5 rounded-r-xl">
+                            <h4 class="font-bold text-slate-900 text-sm md:text-base">1. Penggunaan Bahasa Baku</h4>
+                            <p class="text-xs md:text-sm text-slate-600 mt-0.5">Bahasa yang formal, komunikatif, dan menghindari bahasa gaul demi menjembatani seluruh kalangan pembaca.</p>
+                        </div>
+                        <div class="border-l-4 border-emerald-600 bg-emerald-50/50 p-3.5 rounded-r-xl">
+                            <h4 class="font-bold text-slate-900 text-sm md:text-base">2. Kalimat Langsung vs Tidak Langsung</h4>
+                            <p class="text-xs md:text-sm text-slate-600 mt-0.5">Kalimat langsung menggunakan tanda petik dua ("...") untuk mengutip ucapan narasumber. Kalimat tidak langsung menyatakan kembali ucapan tanpa tanda petik.</p>
+                        </div>
+                        <div class="border-l-4 border-emerald-600 bg-emerald-50/50 p-3.5 rounded-r-xl">
+                            <h4 class="font-bold text-slate-900 text-sm md:text-base">3. Kata Kerja Pewarta (Verba Pewarta)</h4>
+                            <p class="text-xs md:text-sm text-slate-600 mt-0.5">Kata kerja yang digunakan untuk mengindikasikan percakapan atau keterangan. Contoh: *mengatakan, menegaskan, menuturkan, menjelaskan*.</p>
+                        </div>
+                        <div class="border-l-4 border-emerald-600 bg-emerald-50/50 p-3.5 rounded-r-xl">
+                            <h4 class="font-bold text-slate-900 text-sm md:text-base">4. Konjungsi Temporal (Hubungan Waktu)</h4>
+                            <p class="text-xs md:text-sm text-slate-600 mt-0.5">Menggunakan kata hubung penunjuk waktu untuk mendukung kronologi berita. Contoh: *kemudian, lalu, setelah, sejak, sebelum*.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complete Learning Button -->
+                <div class="bg-slate-50 p-4 border-t border-slate-200 flex justify-between items-center">
+                    <span class="text-xs text-slate-500 font-medium">BACA SEMUA TAB SEBELUM SELESAI</span>
+                    <button onclick="completeMateri()" class="bg-slate-950 text-white font-bold px-5 py-2.5 rounded-xl hover:bg-slate-800 transition flex items-center space-x-2 text-sm">
+                        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                        <span>Saya Paham, Selesai Belajar!</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= MISI 1 (DETEKTIF ADIKSIMBA) SCREEN ================= -->
+        <section id="detektif-screen" class="hidden space-y-6 w-full">
+            <div class="flex justify-between items-center">
+                <button onclick="goToScreen('dashboard-screen')" class="text-slate-600 hover:text-slate-900 font-bold flex items-center space-x-2 text-sm">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Kembali ke Redaksi</span>
+                </button>
+                <div class="flex items-center space-x-3">
+                    <span class="text-xs bg-indigo-100 text-indigo-800 font-bold px-3 py-1.5 rounded-full"><i class="fa-solid fa-compass mr-1.5"></i>Detektif ADiKSiMBa</span>
+                </div>
+            </div>
+
+            <!-- Game Instructions Card -->
+            <div class="bg-white border-2 border-slate-800 p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] space-y-4">
+                <div class="border-b-2 border-dashed border-slate-200 pb-3">
+                    <h3 class="newspaper-title text-2xl font-bold text-indigo-900 flex items-center">
+                        <span class="mr-2">🔍</span> Berita Utama Hari Ini
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-1 font-semibold uppercase tracking-wider">REDAKTUR MEMINTA ANDA MENGANALISIS UNTUK TEKS BERIKUT</p>
+                </div>
+
+                <!-- The Actual News Box -->
+                <div class="bg-amber-50/50 border-2 border-slate-350 p-5 rounded-xl space-y-3 font-serif">
+                    <h4 class="text-lg font-bold text-slate-900 text-center border-b border-slate-300 pb-2 italic">Siswa SMP Bandung Ciptakan Alat Penyaring Sampah Plastik Otomatis</h4>
+                    <p class="text-sm md:text-base leading-relaxed text-slate-800 text-justify">
+                        <span class="font-bold">BANDUNG (12/10)</span> - Kelompok siswa berbakat dari <span class="bg-yellow-100 px-1 border-b-2 border-yellow-400 font-bold text-slate-900">SMP Negeri 1 Bandung</span> sukses merancang <span class="bg-blue-100 px-1 border-b-2 border-blue-400 font-bold text-slate-900">alat penyaring sampah plastik otomatis</span> yang dipasang di aliran Sungai Cikapundung pada <span class="bg-emerald-100 px-1 border-b-2 border-emerald-400 font-bold text-slate-900">Kamis pagi</span> kemarin. Langkah ini mereka lakukan karena <span class="bg-rose-100 px-1 border-b-2 border-rose-400 font-bold text-slate-900">prihatin melihat tumpukan sampah menyumbat sungai</span> dan memicu banjir tahunan kota. Sistem inovatif tersebut bekerja dengan mendeteksi jenis limbah menggunakan kamera pintar, lalu <span class="bg-purple-100 px-1 border-b-2 border-purple-400 font-bold text-slate-900">menggerakkan lengan mekanik</span> untuk menyaringnya keluar.
+                    </p>
+                </div>
+
+                <!-- Match Section -->
+                <div class="space-y-4 pt-2">
+                    <h4 class="text-sm font-bold text-slate-700 uppercase tracking-wide">Misi Detektif: Hubungkan Pertanyaan ADiKSiMBa ke Potongan Berita di Atas!</h4>
+                    
+                    <div id="detektif-challenges" class="space-y-3">
+                        <!-- Questions will dynamically load here -->
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
+                    <span class="text-xs text-slate-500 font-semibold" id="detektif-progress">Tantangan 1 dari 4</span>
+                    <button onclick="submitDetektifAnswer()" id="detektif-next-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl transition flex items-center space-x-2 text-sm shadow-md">
+                        <span>Verifikasi Jawaban</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= MISI 2 (PIRAMIDA TERBALIK) SCREEN ================= -->
+        <section id="piramida-screen" class="hidden space-y-6 w-full">
+            <div class="flex justify-between items-center">
+                <button onclick="goToScreen('dashboard-screen')" class="text-slate-600 hover:text-slate-900 font-bold flex items-center space-x-2 text-sm">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Kembali ke Redaksi</span>
+                </button>
+                <span class="text-xs bg-orange-100 text-orange-800 font-bold px-3 py-1.5 rounded-full"><i class="fa-solid fa-sort mr-1.5"></i>Piramida Terbalik</span>
+            </div>
+
+            <!-- Puzzle Intro -->
+            <div class="bg-white border-2 border-slate-800 p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] space-y-4">
+                <div class="space-y-1">
+                    <h3 class="newspaper-title text-2xl font-bold text-orange-950">Menyusun Struktur Berita</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">Berita tentang banjir di kota ini berantakan! Sebagai seorang redaktur, rapikan urutannya dari bagian yang paling krusial (**Kepala Berita/Lead**) ke bagian pelengkap (**Kaki Berita**).</p>
+                </div>
+
+                <!-- Reorder Container -->
+                <div class="space-y-4 py-2">
+                    <div class="text-xs font-bold text-slate-500 uppercase tracking-widest text-center border-b border-slate-100 pb-2">STRUKTUR BERITA (Atur Urutan Dengan Tombol)</div>
+                    
+                    <div id="piramida-blocks" class="space-y-3">
+                        <!-- Dynamic items with UP/DOWN actions -->
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-200 flex justify-between items-center">
+                    <span class="text-xs text-slate-500 font-semibold italic">Ubah posisi paragraf agar menjadi struktur berita yang ideal.</span>
+                    <button onclick="verifyPiramidaOrder()" class="bg-orange-600 hover:bg-orange-700 text-white font-bold px-6 py-2.5 rounded-xl transition flex items-center space-x-2 text-sm shadow-md">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Kirim ke Percetakan!</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= MISI 3 (KUIS REDAKTUR) SCREEN ================= -->
+        <section id="kuis-screen" class="hidden space-y-6 w-full">
+            <div class="flex justify-between items-center">
+                <button onclick="goToScreen('dashboard-screen')" class="text-slate-600 hover:text-slate-900 font-bold flex items-center space-x-2 text-sm">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Kembali ke Redaksi</span>
+                </button>
+                <div class="flex items-center space-x-3">
+                    <div id="quiz-timer" class="text-xs bg-rose-100 text-rose-800 font-extrabold px-3 py-1.5 rounded-full flex items-center space-x-1">
+                        <i class="fa-solid fa-clock animate-spin"></i>
+                        <span id="quiz-time-display">00:00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Main Box -->
+            <div class="bg-white border-2 border-slate-800 p-6 rounded-2xl shadow-[6px_6px_0px_0px_rgba(30,41,59,1)] space-y-6">
+                <!-- Progress Header -->
+                <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                    <span id="quiz-progress-text" class="text-xs font-bold text-slate-500 uppercase tracking-widest">Pertanyaan 1 dari 5</span>
+                    <span class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-md font-bold" id="quiz-question-type">Teori Berita</span>
+                </div>
+
+                <!-- Question -->
+                <div class="space-y-3">
+                    <h4 id="quiz-question-text" class="text-base md:text-lg font-bold text-slate-900 leading-relaxed">Pertanyaan yang sedang diuji...</h4>
+                </div>
+
+                <!-- Answer Choices -->
+                <div id="quiz-options" class="grid grid-cols-1 gap-3">
+                    <!-- Dynamic option buttons -->
+                </div>
+
+                <!-- Action Button -->
+                <div class="pt-4 border-t border-slate-200 flex justify-end">
+                    <button id="quiz-action-btn" onclick="nextQuizQuestion()" disabled class="bg-slate-400 cursor-not-allowed text-white font-bold px-6 py-2.5 rounded-xl transition flex items-center space-x-2 text-sm shadow-md">
+                        <span>Pilih Jawaban Terlebih Dahulu</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= RAPOR & EVALUASI SCREEN ================= -->
+        <section id="rapor-screen" class="hidden space-y-6 w-full max-w-2xl mx-auto">
+            <div class="flex justify-between items-center">
+                <button onclick="goToScreen('dashboard-screen')" class="text-slate-600 hover:text-slate-900 font-bold flex items-center space-x-2 text-sm">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Kembali ke Dashboard</span>
+                </button>
+                <button onclick="window.print()" class="text-xs bg-slate-200 text-slate-700 font-bold px-3 py-1.5 rounded-full hover:bg-slate-300"><i class="fa-solid fa-print mr-1"></i>Cetak Rapor</button>
+            </div>
+
+            <div class="bg-white border-4 border-slate-900 p-6 md:p-8 rounded-2xl shadow-[8px_8px_0px_0px_rgba(30,41,59,1)] space-y-6 relative overflow-hidden">
+                <div class="absolute -right-12 -top-12 bg-amber-500/10 text-amber-500 w-44 h-44 rounded-full flex items-center justify-center border-4 border-dashed border-amber-500/20 transform rotate-12">
+                    <i class="fa-solid fa-award text-6xl"></i>
+                </div>
+
+                <div class="text-center space-y-2 border-b-4 border-double border-slate-800 pb-5">
+                    <h3 class="newspaper-title text-3xl font-black text-slate-900">SERTIFIKAT RAPOR JURNALIS</h3>
+                    <p class="text-xs text-slate-500 font-semibold tracking-wider uppercase">Diberikan Kepada Siswa Berprestasi Kelas 8 Bahasa Indonesia</p>
+                </div>
+
+                <!-- Student Info Block -->
+                <div class="grid grid-cols-2 gap-4 border-b border-slate-200 pb-4">
+                    <div>
+                        <span class="text-xs text-slate-400 font-semibold uppercase">Nama Jurnalis Muda</span>
+                        <p id="rapor-student-name" class="font-extrabold text-slate-900 text-lg">Siswa</p>
+                    </div>
+                    <div>
+                        <span class="text-xs text-slate-400 font-semibold uppercase">Lencana Saat Ini</span>
+                        <p id="rapor-badge-title" class="font-extrabold text-indigo-700 text-lg">Jurnalis Magang</p>
+                    </div>
+                </div>
+
+                <!-- Scoring Breakdown -->
+                <div class="space-y-4">
+                    <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Hasil Petualangan Redaksi</h4>
+                    
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                            <span class="text-sm font-semibold text-slate-700">1. Kelas Jurnalistik (Materi)</span>
+                            <span id="rapor-score-materi" class="text-sm font-extrabold text-emerald-800">Belum Selesai</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+                            <span class="text-sm font-semibold text-slate-700">2. Detektif ADiKSiMBa (Game 1)</span>
+                            <span id="rapor-score-detektif" class="text-sm font-extrabold text-indigo-800">0 Poin</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-orange-50 rounded-xl border border-orange-100">
+                            <span class="text-sm font-semibold text-slate-700">3. Susun Piramida Terbalik (Game 2)</span>
+                            <span id="rapor-score-piramida" class="text-sm font-extrabold text-orange-800">0 Poin</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-rose-50 rounded-xl border border-rose-100">
+                            <span class="text-sm font-semibold text-slate-700">4. Kuis Evaluasi Redaktur (Kuis Akhir)</span>
+                            <span id="rapor-score-kuis" class="text-sm font-extrabold text-rose-800">0/5 Benar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Editorial Board Feedback -->
+                <div class="bg-amber-50 p-4 rounded-xl border border-amber-200">
+                    <h5 class="text-xs font-black text-amber-900 uppercase tracking-widest flex items-center mb-1">
+                        <span class="mr-1.5">👨‍💼</span> Catatan Pemimpin Redaksi:
+                    </h5>
+                    <p id="rapor-feedback-text" class="text-xs text-amber-800 leading-relaxed font-medium">Selesaikan semua misi yang ada untuk mendapat pujian eksklusif dari Pemimpin Redaksi.</p>
+                </div>
+
+                <div class="flex justify-center pt-2">
+                    <button onclick="goToScreen('dashboard-screen')" class="bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-8 rounded-xl transition text-sm shadow">
+                        Lanjutkan Belajar & Perbaiki Nilai
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- TOAST MESSAGES / FEEDBACK MODALS (Avoiding alerts) -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 max-w-sm space-y-2 pointer-events-none"></div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t-4 border-slate-950 mt-10 text-xs">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div class="text-center md:text-left">
+                <p class="font-bold text-slate-200">WartaEdu © 2026</p>
+                <p class="mt-0.5">Media Kreatif Belajar Mandiri Bahasa Indonesia Kelas 8</p>
+            </div>
+            <div class="flex space-x-4">
+                <span class="text-xs bg-slate-800 px-3 py-1 rounded border border-slate-700 font-bold text-emerald-400">Kurikulum Merdeka</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sound Synthesis Settings using Tone.js
+        const synth = new Tone.Synth().toDestination();
+        const polySynth = new Tone.PolySynth().toDestination();
+
+        function playSound(type) {
+            try {
+                if (Tone.context.state !== 'running') {
+                    Tone.start();
+                }
+                if (type === 'click') {
+                    synth.triggerAttackRelease('C4', '8n');
+                } else if (type === 'success') {
+                    polySynth.triggerAttackRelease(['C4', 'E4', 'G4', 'C5'], '4n');
+                } else if (type === 'fail') {
+                    synth.triggerAttackRelease('G2', '4n');
+                } else if (type === 'level-up') {
+                    polySynth.triggerAttackRelease(['G4', 'B4', 'D5', 'G5'], '2n');
+                }
+            } catch (e) {
+                console.log('Audio Context Error:', e);
+            }
+        }
+
+        // App States
+        const appState = {
+            currentScreen: 'welcome-screen',
+            playerName: '',
+            avatar: '👨‍🎓',
+            stars: 0,
+            completedMissions: [], // 'materi', 'detektif', 'piramida', 'kuis'
+            scores: {
+                materi: 0,
+                detektif: 0,
+                piramida: 0,
+                kuis: 0
+            },
+            quizAnswers: [],
+            currentQuizIdx: 0,
+            // Game 1 Match Data
+            detektifCurrentChallengeIdx: 0,
+            detektifChallengeAnswer: null
+        };
+
+        // Static Challenge Database for Detektif ADiKSiMBa
+        const detektifData = [
+            {
+                phrase: "SMP Negeri 1 Bandung",
+                options: ["Apa", "Di mana", "Siapa", "Kapan"],
+                correct: "Siapa",
+                hint: "Merujuk kepada orang, lembaga, atau pelaku utama yang melakukan inovasi di dalam berita."
+            },
+            {
+                phrase: "alat penyaring sampah plastik otomatis",
+                options: ["Apa", "Siapa", "Kapan", "Mengapa"],
+                correct: "Apa",
+                hint: "Menjelaskan objek, penciptaan, atau produk utama yang sedang diberitakan."
+            },
+            {
+                phrase: "Kamis pagi",
+                options: ["Di mana", "Kapan", "Bagaimana", "Mengapa"],
+                correct: "Kapan",
+                hint: "Merupakan penunjuk waktu yang spesifik dari terjadinya peristiwa jurnalistik."
+            },
+            {
+                phrase: "prihatin melihat tumpukan sampah menyumbat sungai",
+                options: ["Bagaimana", "Siapa", "Mengapa", "Di mana"],
+                correct: "Mengapa",
+                hint: "Merupakan dasar pemikiran, penyebab dasar, atau motif mengapa anak-anak tersebut beraksi."
+            }
+        ];
+
+        // Static Game 2 Piramida Terbalik Data
+        // Correct chronological sequence of pyramid structure (0, 1, 2)
+        const piramidaData = [
+            {
+                id: "kepala",
+                title: "Paragraf 1 (Kepala Berita / Lead)",
+                text: "Sekelompok siswa dari SMP Negeri 1 Bandung berhasil merancang alat penyaring sampah otomatis berbasis kecerdasan buatan (AI) yang diuji coba langsung di Sungai Cikapundung pada Kamis (12/10) pagi.",
+                weight: 3
+            },
+            {
+                id: "tubuh",
+                title: "Paragraf 2 (Tubuh Berita)",
+                text: "Alat ini dipasang di pintu air sungai dan menggunakan sensor kamera untuk mengenali botol serta kantong plastik. Robotik lengan kemudian mengambil limbah secara otomatis tanpa menyumbat jalannya air sungai utama.",
+                weight: 2
+            },
+            {
+                id: "kaki",
+                title: "Paragraf 3 (Kaki Berita / Tambahan)",
+                text: "Dinas Lingkungan Hidup Bandung menyatakan sangat bangga dan berencana memproduksi prototipe ini secara masal guna didistribusikan di area sungai sekunder kota.",
+                weight: 1
+            }
+        ];
+
+        // Shuffled holder for Piramida game runtime
+        let currentPiramidaBlocks = [];
+
+        // Static Quiz Database
+        const quizData = [
+            {
+                question: "Rumus baku penyusunan unsur-unsur berita dalam Bahasa Indonesia dikenal dengan singkatan...",
+                options: ["Piramida Terbalik", "ADiKSiMBa", "SWOT", "Teks Faktual"],
+                correct: 1, // ADiKSiMBa
+                type: "Konsep Dasar",
+                explanation: "ADiKSiMBa kepanjangan dari Apa, Di mana, Kapan, Siapa, Mengapa, Bagaimana."
+            },
+            {
+                question: "Pernyataan yang dikutip langsung dari ucapan narasumber dalam berita ditandai oleh...",
+                options: ["Tanda Petik Ganda (\"\")", "Huruf yang dicetak miring (italic)", "Tanda kurung siku ([...])", "Kata kerja pewarta penjelas"],
+                correct: 0, // Tanda Petik Ganda
+                type: "Kebahasaan",
+                explanation: "Kutipan langsung wajib menggunakan tanda petik dua di awal dan akhir pernyataan."
+            },
+            {
+                question: "Mengapa teks berita harus ditulis dalam bentuk 'Piramida Terbalik'?",
+                options: [
+                    "Agar bagian penutup berita terlihat sangat dramatis bagi pembaca.",
+                    "Agar informasi yang terpenting tersampaikan lebih dulu kepada pembaca secara cepat.",
+                    "Agar jurnalis dapat menghemat ruang kertas koran secara estetik.",
+                    "Supaya berita tidak mudah dibajak oleh kantor berita lain."
+                ],
+                correct: 1,
+                type: "Struktur Berita",
+                explanation: "Struktur piramida terbalik menyajikan bagian paling klimaks/esensial di awal teks."
+            },
+            {
+                question: "Manakah di bawah ini yang menggunakan 'Verba Pewarta' dengan tepat?",
+                options: [
+                    "Siswa tersebut berjalan cepat ke arah sungai dekat sekolah.",
+                    "\"Kami ingin lingkungan bersih,\" tegas Kepala Sekolah SMPN 1 Bandung.",
+                    "Banjir besar kembali melanda sebagian wilayah Jawa Barat kemarin sore.",
+                    "Kemudian, relawan mulai mengevakuasi tumpukan sampah plastik."
+                ],
+                correct: 1, // kata kerja tegas/pewarta
+                type: "Kebahasaan",
+                explanation: "Kata 'tegas' atau 'mengatakan' adalah kata kerja pewarta yang menyertai kutipan."
+            },
+            {
+                question: "Ciri khas utama teks berita adalah harus bersifat 'Faktual' dan 'Objektif'. Apa maksud dari Faktual?",
+                options: [
+                    "Berdasarkan imajinasi kreatif sang reporter di lapangan.",
+                    "Menggunakan opini tajam dari masyarakat sekitar lokasi.",
+                    "Berdasarkan kenyataan nyata dan data yang benar-benar ada.",
+                    "Ditulis secara puitis agar pembaca merasa tersentuh."
+                ],
+                correct: 2,
+                type: "Konsep Dasar",
+                explanation: "Faktual berarti berisi fakta nyata, tidak mengada-ada, dan berlandaskan kejadian riil."
+            }
+        ];
+
+        let quizTimerInterval = null;
+        let quizTimeSeconds = 0;
+
+        // Custom Show Toast Utility
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-slate-900 text-white";
+            let icon = "fa-info-circle";
+            if (type === 'success') {
+                bgClass = "bg-emerald-600 text-white";
+                icon = "fa-circle-check";
+            } else if (type === 'error') {
+                bgClass = "bg-rose-600 text-white";
+                icon = "fa-circle-exclamation";
+            }
+            
+            toast.className = `${bgClass} p-4 rounded-xl shadow-lg border border-white/20 flex items-center space-x-3 pointer-events-auto transition-all duration-300 opacity-0 transform translate-y-2`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} text-lg flex-shrink-0"></i>
+                <div class="text-xs font-bold leading-tight">${message}</div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => {
+                toast.classList.remove('opacity-0', 'translate-y-2');
+                toast.classList.add('opacity-100', 'translate-y-0');
+            }, 10);
+            
+            // Auto Remove
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3500);
+        }
+
+        // Character selector interaction
+        function selectAvatar(avatar, element) {
+            playSound('click');
+            appState.avatar = avatar;
+            
+            // Style active border
+            document.querySelectorAll('.avatar-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-600', 'border-2');
+                btn.classList.add('border-slate-200', 'border');
+            });
+            element.classList.remove('border-slate-200', 'border');
+            element.classList.add('border-indigo-600', 'border-2');
+        }
+
+        // Navigation
+        function goToScreen(screenId) {
+            playSound('click');
+            // Hide all
+            ['welcome-screen', 'dashboard-screen', 'materi-screen', 'detektif-screen', 'piramida-screen', 'kuis-screen', 'rapor-screen'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            // Show target
+            document.getElementById(screenId).classList.remove('hidden');
+            appState.currentScreen = screenId;
+
+            // Trigger specific screen initiators
+            if (screenId === 'dashboard-screen') {
+                updateDashboardBadges();
+            }
+        }
+
+        // Starting Application from Welcome Screen
+        function startApp() {
+            const nameInput = document.getElementById('player-name-input').value.trim();
+            if (!nameInput) {
+                showNotification("Masukkan nama jurnalis hebat kamu terlebih dahulu!", "error");
+                playSound('fail');
+                return;
+            }
+
+            appState.playerName = nameInput;
+            
+            // Update Header Display info
+            document.getElementById('player-avatar-header').innerText = appState.avatar;
+            document.getElementById('player-name-header').innerText = appState.playerName;
+            document.getElementById('player-stars-header').innerText = appState.stars;
+            
+            // Show header states
+            document.getElementById('header-user-status').classList.remove('hidden');
+
+            playSound('level-up');
+            showNotification(`Selamat bergabung di Kantor Redaksi, Reporter ${appState.playerName}!`, "success");
+            goToScreen('dashboard-screen');
+        }
+
+        // Updating Dashboard Badges & State UI
+        function updateDashboardBadges() {
+            // Stars
+            document.getElementById('player-stars-header').innerText = appState.stars;
+
+            // Mission checkmarks
+            if (appState.completedMissions.includes('materi')) {
+                document.getElementById('badge-materi').className = "text-emerald-500";
+            }
+            if (appState.completedMissions.includes('detektif')) {
+                document.getElementById('badge-detektif').className = "text-indigo-500";
+            }
+            if (appState.completedMissions.includes('piramida')) {
+                document.getElementById('badge-piramida').className = "text-orange-500";
+            }
+            if (appState.completedMissions.includes('kuis')) {
+                document.getElementById('badge-kuis').className = "text-rose-500";
+            }
+        }
+
+        // Materi Screen Tabs Switching
+        function switchMateriTab(tabName) {
+            playSound('click');
+            // Reset active style for buttons
+            ['adiksiba', 'struktur', 'kebahasaan'].forEach(name => {
+                const btn = document.getElementById(`tab-${name}`);
+                btn.className = "py-4 border-r border-slate-200 text-slate-600 hover:text-slate-800 hover:bg-slate-50 transition";
+                document.getElementById(`materi-${name}`).classList.add('hidden');
+            });
+
+            // Set active target
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            activeBtn.className = "py-4 border-r border-slate-200 text-indigo-600 bg-white border-b-2 border-b-indigo-600 font-extrabold";
+            document.getElementById(`materi-${tabName}`).classList.remove('hidden');
+        }
+
+        function completeMateri() {
+            if (!appState.completedMissions.includes('materi')) {
+                appState.completedMissions.push('materi');
+                appState.stars += 10;
+                playSound('success');
+                showNotification("Keren! Kamu mendapat 10 ⭐️ karena telah menyelesaikan Kelas Jurnalistik dasar.", "success");
+            } else {
+                playSound('click');
+            }
+            goToScreen('dashboard-screen');
+        }
+
+        // Game 1: Detektif ADiKSiMBa Logic
+        function startDetektifGame() {
+            appState.detektifCurrentChallengeIdx = 0;
+            appState.scores.detektif = 0;
+            loadDetektifChallenge();
+            goToScreen('detektif-screen');
+        }
+
+        function loadDetektifChallenge() {
+            const challenge = detektifData[appState.detektifCurrentChallengeIdx];
+            appState.detektifChallengeAnswer = null; // reset answer
+
+            // Progress text
+            document.getElementById('detektif-progress').innerText = `Tantangan ${appState.detektifCurrentChallengeIdx + 1} dari ${detektifData.length}`;
+
+            // Set next button text
+            const nextBtn = document.getElementById('detektif-next-btn');
+            nextBtn.innerHTML = `<span>Verifikasi Jawaban</span> <i class="fa-solid fa-check"></i>`;
+            nextBtn.className = "bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl transition flex items-center space-x-2 text-sm shadow-md";
+
+            const container = document.getElementById('detektif-challenges');
+            container.innerHTML = `
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
+                    <div class="flex items-center space-x-2 text-sm text-indigo-900">
+                        <span class="bg-indigo-100 px-2.5 py-1 rounded-md font-extrabold">PETUNJUK KUTIPAN</span>
+                        <span class="font-bold">"${challenge.phrase}"</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        ${challenge.options.map(opt => `
+                            <button onclick="selectDetektifAnswer('${opt}', this)" class="detektif-opt-btn border-2 border-slate-200 bg-white hover:bg-slate-50 p-3 rounded-lg text-xs md:text-sm font-bold text-slate-700 transition">
+                                Unsur: ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <!-- Hint / Explanation panel (initially hidden) -->
+                    <div id="detektif-explanation-box" class="hidden p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-xs text-indigo-950 flex items-start space-x-2">
+                        <span>💡</span>
+                        <div>
+                            <span class="font-extrabold text-indigo-900">Ulasan Redaktur:</span>
+                            <p class="mt-0.5">${challenge.hint}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectDetektifAnswer(optValue, btnElement) {
+            playSound('click');
+            appState.detektifChallengeAnswer = optValue;
+
+            // Highlight chosen button
+            document.querySelectorAll('.detektif-opt-btn').forEach(btn => {
+                btn.className = "detektif-opt-btn border-2 border-slate-200 bg-white hover:bg-slate-50 p-3 rounded-lg text-xs md:text-sm font-bold text-slate-700 transition";
+            });
+
+            btnElement.className = "detektif-opt-btn border-2 border-indigo-600 bg-indigo-50 p-3 rounded-lg text-xs md:text-sm font-extrabold text-indigo-700 transition";
+        }
+
+        function submitDetektifAnswer() {
+            if (!appState.detektifChallengeAnswer) {
+                showNotification("Pilih satu unsur ADiKSiMBa di atas terlebih dahulu!", "error");
+                playSound('fail');
+                return;
+            }
+
+            const challenge = detektifData[appState.detektifCurrentChallengeIdx];
+            const nextBtn = document.getElementById('detektif-next-btn');
+
+            // If we are showing explanation/next transition state
+            if (nextBtn.getAttribute('data-state') === 'next') {
+                appState.detektifCurrentChallengeIdx++;
+                nextBtn.removeAttribute('data-state');
+                
+                if (appState.detektifCurrentChallengeIdx < detektifData.length) {
+                    loadDetektifChallenge();
+                } else {
+                    // Game Complete
+                    if (!appState.completedMissions.includes('detektif')) {
+                        appState.completedMissions.push('detektif');
+                        appState.stars += 25;
+                    }
+                    playSound('level-up');
+                    showNotification(`Misi Detektif Selesai! Kamu mengumpulkan ${appState.scores.detektif} dari ${detektifData.length} poin berita.`, "success");
+                    goToScreen('dashboard-screen');
+                }
+                return;
+            }
+
+            // Evaluation phase
+            const isCorrect = appState.detektifChallengeAnswer === challenge.correct;
+            const explanationBox = document.getElementById('detektif-explanation-box');
+            explanationBox.classList.remove('hidden');
+
+            // Disable opt buttons
+            document.querySelectorAll('.detektif-opt-btn').forEach(btn => {
+                btn.setAttribute('disabled', 'true');
+            });
+
+            if (isCorrect) {
+                playSound('success');
+                appState.scores.detektif++;
+                appState.stars += 5;
+                showNotification("Koreksi Redaksi: TEPAT SEKALI!", "success");
+                // Color selected button as green
+                document.querySelectorAll('.detektif-opt-btn').forEach(btn => {
+                    if (btn.innerText.includes(challenge.correct)) {
+                        btn.className = "detektif-opt-btn border-2 border-emerald-600 bg-emerald-50 p-3 rounded-lg text-xs md:text-sm font-extrabold text-emerald-700 transition";
+                    }
+                });
+            } else {
+                playSound('fail');
+                showNotification("Koreksi Redaksi: Kurang tepat.", "error");
+                // Color selected as red, correct as green
+                document.querySelectorAll('.detektif-opt-btn').forEach(btn => {
+                    if (btn.innerText.includes(appState.detektifChallengeAnswer)) {
+                        btn.className = "detektif-opt-btn border-2 border-rose-600 bg-rose-50 p-3 rounded-lg text-xs md:text-sm font-extrabold text-rose-700 transition";
+                    }
+                    if (btn.innerText.includes(challenge.correct)) {
+                        btn.className = "detektif-opt-btn border-2 border-emerald-600 bg-emerald-50 p-3 rounded-lg text-xs md:text-sm font-extrabold text-emerald-700 transition";
+                    }
+                });
+            }
+
+            // Change Action button state to "Next"
+            nextBtn.setAttribute('data-state', 'next');
+            nextBtn.innerHTML = `<span>Lanjut ke Tantangan Baru</span> <i class="fa-solid fa-arrow-right"></i>`;
+            nextBtn.className = "bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-xl transition flex items-center space-x-2 text-sm shadow-md";
+        }
+
+        // Game 2: Piramida Terbalik Logic
+        function startPiramidaGame() {
+            appState.scores.piramida = 0;
+            // Clone and Shuffle initial placement
+            currentPiramidaBlocks = [...piramidaData].sort(() => Math.random() - 0.5);
+            renderPiramidaBlocks();
+            goToScreen('piramida-screen');
+        }
+
+        function renderPiramidaBlocks() {
+            const container = document.getElementById('piramida-blocks');
+            container.innerHTML = '';
+
+            currentPiramidaBlocks.forEach((block, index) => {
+                container.innerHTML += `
+                    <div class="bg-white border-2 border-slate-300 p-4 rounded-xl shadow-sm flex items-center justify-between space-x-3 transition transform hover:scale-[1.01]">
+                        <div class="space-y-1 flex-grow">
+                            <span class="bg-slate-100 text-slate-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">Teks Acak #${index+1}</span>
+                            <p class="text-xs md:text-sm text-slate-700 leading-relaxed font-serif text-justify">${block.text}</p>
+                        </div>
+                        <div class="flex flex-col space-y-1.5 flex-shrink-0">
+                            <button onclick="movePiramidaBlock(${index}, -1)" ${index === 0 ? 'disabled class="text-slate-200 cursor-not-allowed"' : 'class="text-indigo-600 hover:text-indigo-800 p-1.5"'} title="Naikkan">
+                                <i class="fa-solid fa-circle-chevron-up text-xl md:text-2xl"></i>
+                            </button>
+                            <button onclick="movePiramidaBlock(${index}, 1)" ${index === currentPiramidaBlocks.length - 1 ? 'disabled class="text-slate-200 cursor-not-allowed"' : 'class="text-indigo-600 hover:text-indigo-800 p-1.5"'} title="Turunkan">
+                                <i class="fa-solid fa-circle-chevron-down text-xl md:text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function movePiramidaBlock(index, direction) {
+            playSound('click');
+            const targetIndex = index + direction;
+            if (targetIndex < 0 || targetIndex >= currentPiramidaBlocks.length) return;
+
+            // Swap element
+            const temp = currentPiramidaBlocks[index];
+            currentPiramidaBlocks[index] = currentPiramidaBlocks[targetIndex];
+            currentPiramidaBlocks[targetIndex] = temp;
+
+            renderPiramidaBlocks();
+        }
+
+        function verifyPiramidaOrder() {
+            // Check if weight order is strictly descending (3 -> 2 -> 1)
+            let isPerfect = true;
+            for (let i = 0; i < currentPiramidaBlocks.length - 1; i++) {
+                if (currentPiramidaBlocks[i].weight < currentPiramidaBlocks[i+1].weight) {
+                    isPerfect = false;
+                    break;
+                }
+            }
+
+            if (isPerfect) {
+                playSound('level-up');
+                appState.scores.piramida = 40;
+                appState.stars += 30;
+                if (!appState.completedMissions.includes('piramida')) {
+                    appState.completedMissions.push('piramida');
+                }
+                showNotification("Luar biasa! Urutan berita sudah sempurna: Kepala -> Tubuh -> Kaki. Korban hoaks terselamatkan!", "success");
+                goToScreen('dashboard-screen');
+            } else {
+                playSound('fail');
+                showNotification("Urutan struktur berita salah. Ingat: Letakkan info paling menarik/penting di bagian teratas!", "error");
+            }
+        }
+
+        // Game 3: Quiz Redaktur Logic
+        function startQuiz() {
+            appState.currentQuizIdx = 0;
+            appState.scores.kuis = 0;
+            appState.quizAnswers = [];
+            
+            // Start clock
+            quizTimeSeconds = 0;
+            document.getElementById('quiz-time-display').innerText = "00:00";
+            clearInterval(quizTimerInterval);
+            quizTimerInterval = setInterval(() => {
+                quizTimeSeconds++;
+                const mins = String(Math.floor(quizTimeSeconds / 60)).padStart(2, '0');
+                const secs = String(quizTimeSeconds % 60).padStart(2, '0');
+                document.getElementById('quiz-time-display').innerText = `${mins}:${secs}`;
+            }, 1000);
+
+            loadQuizQuestion();
+            goToScreen('kuis-screen');
+        }
+
+        function loadQuizQuestion() {
+            const questionData = quizData[appState.currentQuizIdx];
+            
+            // Progress tracker update
+            document.getElementById('quiz-progress-text').innerText = `Pertanyaan ${appState.currentQuizIdx + 1} dari ${quizData.length}`;
+            document.getElementById('quiz-question-type').innerText = questionData.type;
+
+            // Question Text
+            document.getElementById('quiz-question-text').innerText = questionData.question;
+
+            // Reset action button to initial disabled
+            const actionBtn = document.getElementById('quiz-action-btn');
+            actionBtn.setAttribute('disabled', 'true');
+            actionBtn.className = "bg-slate-400 cursor-not-allowed text-white font-bold px-6 py-2.5 rounded-xl transition flex items-center space-x-2 text-sm shadow-md";
+            actionBtn.innerHTML = `<span>Pilih Jawaban Terlebih Dahulu</span>`;
+
+            // Options rendering
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            questionData.options.forEach((opt, index) => {
+                optionsContainer.innerHTML += `
+                    <button id="quiz-opt-${index}" onclick="selectQuizOption(${index})" class="quiz-option-item text-left border-2 border-slate-200 bg-white hover:bg-slate-50 p-4 rounded-xl text-sm font-semibold text-slate-700 transition flex justify-between items-center">
+                        <span>${opt}</span>
+                        <span class="indicator text-xs"></span>
+                    </button>
+                `;
+            });
+        }
+
+        function selectQuizOption(optionIdx) {
+            playSound('click');
+            // Highlight selected, clear others
+            document.querySelectorAll('.quiz-option-item').forEach((btn, idx) => {
+                if (idx === optionIdx) {
+                    btn.className = "quiz-option-item text-left border-2 border-indigo-600 bg-indigo-50 p-4 rounded-xl text-sm font-bold text-indigo-800 transition flex justify-between items-center";
+                    btn.querySelector('.indicator').innerHTML = `<i class="fa-solid fa-circle text-indigo-600"></i>`;
+                } else {
+                    btn.className = "quiz-option-item text-left border-2 border-slate-200 bg-white hover:bg-slate-50 p-4 rounded-xl text-sm font-semibold text-slate-700 transition flex justify-between items-center";
+                    btn.querySelector('.indicator').innerHTML = ``;
+                }
+            });
+
+            // Store choice
+            appState.quizAnswers[appState.currentQuizIdx] = optionIdx;
+
+            // Enable action button
+            const actionBtn = document.getElementById('quiz-action-btn');
+            actionBtn.removeAttribute('disabled');
+            actionBtn.className = "bg-rose-600 hover:bg-rose-700 text-white font-bold px-6 py-2.5 rounded-xl transition flex items-center space-x-2 text-sm shadow-md cursor-pointer";
+            actionBtn.innerHTML = `<span>Verifikasi Jawaban</span> <i class="fa-solid fa-circle-check"></i>`;
+        }
+
+        function nextQuizQuestion() {
+            const chosenAnswer = appState.quizAnswers[appState.currentQuizIdx];
+            const correctAnswer = quizData[appState.currentQuizIdx].correct;
+            const actionBtn = document.getElementById('quiz-action-btn');
+
+            // If we are currently showing explanation and the button state is "Next"
+            if (actionBtn.getAttribute('data-state') === 'next') {
+                actionBtn.removeAttribute('data-state');
+                appState.currentQuizIdx++;
+                
+                if (appState.currentQuizIdx < quizData.length) {
+                    loadQuizQuestion();
+                } else {
+                    // Quiz End
+                    clearInterval(quizTimerInterval);
+                    if (!appState.completedMissions.includes('kuis')) {
+                        appState.completedMissions.push('kuis');
+                    }
+                    playSound('level-up');
+                    showNotification(`Kuis Selesai! Kamu menjawab benar sebanyak ${appState.scores.kuis} dari ${quizData.length} pertanyaan.`, "success");
+                    goToScreen('dashboard-screen');
+                }
+                return;
+            }
+
+            // Otherwise, we are scoring current choice
+            const isCorrect = chosenAnswer === correctAnswer;
+
+            // Disable further choice clicks
+            document.querySelectorAll('.quiz-option-item').forEach(btn => {
+                btn.setAttribute('disabled', 'true');
+            });
+
+            if (isCorrect) {
+                playSound('success');
+                appState.scores.kuis++;
+                appState.stars += 15;
+                showNotification("Tepat sekali!", "success");
+                
+                // Highlight option in green
+                const correctBtn = document.getElementById(`quiz-opt-${correctAnswer}`);
+                correctBtn.className = "quiz-option-item text-left border-2 border-emerald-600 bg-emerald-50 p-4 rounded-xl text-sm font-extrabold text-emerald-800 transition flex justify-between items-center";
+                correctBtn.querySelector('.indicator').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i>`;
+            } else {
+                playSound('fail');
+                showNotification("Kurang tepat.", "error");
+
+                // Highlight correct in green, incorrect in red
+                const wrongBtn = document.getElementById(`quiz-opt-${chosenAnswer}`);
+                wrongBtn.className = "quiz-option-item text-left border-2 border-rose-600 bg-rose-50 p-4 rounded-xl text-sm font-extrabold text-rose-800 transition flex justify-between items-center";
+                wrongBtn.querySelector('.indicator').innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i>`;
+
+                const correctBtn = document.getElementById(`quiz-opt-${correctAnswer}`);
+                correctBtn.className = "quiz-option-item text-left border-2 border-emerald-600 bg-emerald-50 p-4 rounded-xl text-sm font-extrabold text-emerald-800 transition flex justify-between items-center";
+                correctBtn.querySelector('.indicator').innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i>`;
+            }
+
+            // Change Action Button state to "Next"
+            actionBtn.setAttribute('data-state', 'next');
+            const isLast = appState.currentQuizIdx === quizData.length - 1;
+            actionBtn.innerHTML = `<span>${isLast ? "Buka Rangkuman Evaluasi" : "Tantangan Berikutnya"}</span> <i class="fa-solid fa-arrow-right"></i>`;
+            actionBtn.className = "bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-xl transition flex items-center space-x-2 text-sm shadow-md";
+        }
+
+        // Game Final: Report generation logic
+        function showReport() {
+            // Fill Student Info
+            document.getElementById('rapor-student-name').innerText = appState.playerName || "Siswa Magang";
+            
+            // Materials check
+            const materiDone = appState.completedMissions.includes('materi');
+            document.getElementById('rapor-score-materi').innerText = materiDone ? "SELESAI (+10 ⭐️)" : "Belum Belajar";
+            document.getElementById('rapor-score-materi').className = materiDone ? "text-sm font-extrabold text-emerald-600" : "text-sm font-extrabold text-slate-400";
+
+            // Games check
+            document.getElementById('rapor-score-detektif').innerText = `${appState.scores.detektif} dari ${detektifData.length} Unsur`;
+            document.getElementById('rapor-score-piramida').innerText = appState.scores.piramida > 0 ? "Berhasil Disusun" : "Belum Berhasil";
+            document.getElementById('rapor-score-kuis').innerText = `${appState.scores.kuis} dari ${quizData.length} Benar`;
+
+            // Badge System
+            let badgeTitle = "Reporter Magang";
+            let feedback = "Kembangkan semangat jurnalisme di dadamu! Selesaikan modul pembelajaran dan taklukkan semua kuis untuk kenaikan pangkat redaksi.";
+            let badgeColor = "text-slate-700";
+
+            if (appState.stars >= 80) {
+                badgeTitle = "Pemimpin Redaksi (Editor-in-Chief)";
+                feedback = "Luar biasa! Penguasaan materi teks berita Anda sangat matang. Anda sanggup menguji, memisahkan fakta dari opini, dan mengelola penerbitan koran sekolah dengan sempurna!";
+                badgeColor = "text-indigo-800";
+            } else if (appState.stars >= 40) {
+                badgeTitle = "Reporter Investigasi Senior";
+                feedback = "Sangat baik! Anda dapat membedakan unsur ADiKSiMBa dengan mudah dan menyusun piramida berita dengan runut. Tingkatkan kebahasaan Anda agar tulisan semakin mantap.";
+                badgeColor = "text-emerald-700";
+            }
+
+            document.getElementById('rapor-badge-title').innerText = badgeTitle;
+            document.getElementById('rapor-badge-title').className = `font-extrabold text-lg ${badgeColor}`;
+            document.getElementById('rapor-feedback-text').innerText = feedback;
+
+            goToScreen('rapor-screen');
+        }
+    </script>
+</body>
+</html>
